@@ -23,7 +23,8 @@ class ArticleCategoryController extends \yii\web\Controller
             'totalCount'=>$total,
             'defaultPageSize'=>$perPage
         ]);
-        //每页显示几条
+        //每页显示几条。。
+
         $brand = $query->limit($pager->limit)->offset($pager->offset)->all();
 
         return $this->render("index",["article"=>$brand,'pager'=>$pager]);

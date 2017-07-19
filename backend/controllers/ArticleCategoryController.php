@@ -5,7 +5,6 @@ namespace backend\controllers;
 use backend\models\ArticleCategory;
 use yii\data\Pagination;
 use yii\web\Request;
-use yii\web\UploadedFile;
 
 class ArticleCategoryController extends \yii\web\Controller
 {

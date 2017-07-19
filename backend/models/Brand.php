@@ -16,7 +16,7 @@ use Yii;
  */
 class Brand extends \yii\db\ActiveRecord
 {
-    public $imgFile;//保存图片上传的对象
+//    public $imgFile;//保存图片上传的对象
 
     //隐藏删除的按钮
     public static function getStatusOptions($hidden_del = true){
@@ -47,9 +47,10 @@ class Brand extends \yii\db\ActiveRecord
             [ ["name","intro","sort","status"],"required","message"=>"{attribute}必填" ],
             [['name'], 'string', 'max' => 50],
             [['intro'], 'string'],
-            ['imgFile','file','extensions'=>['jpg','png','gif']],
+//            ['imgFile','file','extensions'=>['jpg','png','gif']],
             [['sort', 'status'], 'integer'],
             [['status'], 'string', 'max' => 255],
+            [['logo'], 'string', 'max' => 255],
         ];
     }
 
@@ -64,7 +65,7 @@ class Brand extends \yii\db\ActiveRecord
             'intro' => '简介',
             'sort' => '排序',
             'status' => '状态',
-            'imgFile' => 'LOGO图片',
+            'logo' => 'LOGO图片',
         ];
     }
 }

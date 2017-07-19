@@ -13,7 +13,7 @@ class ArticleCategoryController extends \yii\web\Controller
     public function actionIndex()
     {
         //分页 总条数 每页显示条数 当前第几页
-        $query = ArticleCategory::find()->where(['!=','status','-1']);
+        $query = ArticleCategory::find()->where(['!=','status','-1'])->orderBy('sort desc');
         //总条数
         $total = $query->count();
         //每页显示条数

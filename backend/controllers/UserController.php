@@ -2,6 +2,7 @@
 
 namespace backend\controllers;
 
+use backend\models\ChangePasswordForm;
 use backend\models\LoginForm;
 use backend\models\User;
 use yii\data\Pagination;
@@ -82,7 +83,7 @@ class UserController extends \yii\web\Controller
                 $user=User::findOne(["username"=> $model->username]);
 //                var_dump($user);exit;
                 $user->last_login_time=time();
-                $user->last_login_ip=\Yii::$app->request->userIP;
+                $user->last_login_ip=ip2long(\Yii::$app->request->userIP);
                 $user->save(false);
                 //登录成功
                 \Yii::$app->session->setFlash('success','登录成功');
@@ -116,5 +117,40 @@ class UserController extends \yii\web\Controller
         // 判断当前用户是否是游客（未认证的）
         $isGuest = \Yii::$app->user->isGuest;
         var_dump($isGuest);
+    }
+
+    //修改自己密码（登录状态才能使用）
+    public function actionChPw(){
+        $model=new ChangePasswordForm();
+        //表单字段  旧密码 新密码 确认新密码
+        if($model->load(\Yii::$app->request->post())&&$model->validate()){
+            //得到当前用户的id
+            $id = \Yii::$app->user->id;
+            if ($id){
+                //得到当前用户的信息
+                $user=User::findOne(["id"=>$id]);
+                if(\Yii::$app->security->validatePassword($model->oldPassword, $user->password_hash)){
+                    //保存新密码加密
+                    $user->password_hash=\Yii::$app->security->generatePasswordHash($model->password);
+                    //保存
+                    $user->save();
+//                    var_dump( $user->password_hash);exit;
+                    //旧密码不正确
+                    \Yii::$app->session->setFlash("danger","密码修改成功");
+                    return $this->redirect(['user/index']);
+                }else{
+                    //旧密码不正确
+                    \Yii::$app->session->setFlash("danger","旧密码输入错误");
+                    return $this->redirect(['user/ch-pw']);
+                }
+
+            }else{
+                \Yii::$app->session->setFlash("danger","请登录");
+                return $this->redirect(['user/login']);
+            }
+        }
+        //验证规则  都不能为空  验证旧密码是否正确  新密码不能和旧密码一样  确认新密码和新密码一样
+        //表单验证通过 更新新密码
+        return $this->render("chpw",["model"=>$model]);
     }
 }

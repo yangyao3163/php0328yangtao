@@ -7,6 +7,7 @@ class LoginForm extends \yii\base\Model{
     public $password_hash;
     public $rememberMe = false;
 
+
     public function rules()
     {
         return [

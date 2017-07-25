@@ -2,69 +2,22 @@
 
 namespace backend\models;
 
-use Yii;
 use yii\web\IdentityInterface;
 
-/**
- * This is the model class for table "user".
- *
- * @property string $id
- * @property string $username
- * @property string $auth_key
- * @property string $password_hash
- * @property string $password_reset_token
- * @property string $email
- * @property integer $status
- * @property integer $created_at
- * @property integer $updated_at
- * @property integer $last_login_time
- * @property integer $last_login_ip
- */
-class User extends \yii\db\ActiveRecord implements IdentityInterface
+class Chpw extends \Yii\db\ActiveRecord implements IdentityInterface
 {
 
-
-    /**
-     * @inheritdoc
-     */
-    public static function tableName()
-    {
-        return 'user';
-    }
-
-    /**
-     * @inheritdoc
-     */
     public function rules()
     {
         return [
-            [['username', 'password_hash', 'email'], 'required',"message"=>"{attribute}不能为空"],
-            [['status', 'created_at', 'updated_at', 'last_login_time', 'last_login_ip'], 'integer'],
-            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
-            [['auth_key'], 'string', 'max' => 32],
-            [['username'], 'unique'],
-            [['email'], 'unique'],
-            [['password_reset_token'], 'unique'],
+            [['password'], 'required',"message"=>"{attribute}不能为空"]
         ];
     }
 
-    /**
-     * @inheritdoc
-     */
     public function attributeLabels()
     {
         return [
-            'id' => 'ID',
-            'username' => '用户名',
-            'auth_key' => 'Auth Key',
-            'password_hash' => '密码',
-            'password_reset_token' => 'Password Reset Token',
-            'email' => '邮箱',
-            'status' => 'Status',
-            'created_at' => 'Created At',
-            'updated_at' => 'Updated At',
-            'last_login_time' => '最后登录时间',
-            'last_login_ip' => '最后登录id',
+            'password'=>'密码111',
         ];
     }
 
@@ -78,7 +31,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findIdentity($id)
     {
         // TODO: Implement findIdentity() method.
-        return self::findOne(['id'=>$id]);
     }
 
     /**
@@ -93,9 +45,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         // TODO: Implement findIdentityByAccessToken() method.
-        return static::findOne(['accessToken'=>$token]);
-
-
     }
 
     /**
@@ -105,7 +54,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getId()
     {
         // TODO: Implement getId() method.
-        return $this->id;
     }
 
     /**
@@ -123,8 +71,6 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function getAuthKey()
     {
         // TODO: Implement getAuthKey() method.
-        return $this->auth_key;
-
     }
 
     /**
@@ -138,14 +84,5 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
     public function validateAuthKey($authKey)
     {
         // TODO: Implement validateAuthKey() method.
-        return $this->auth_key === $authKey;
-
-    }
-
-    //生成随机的auth_key，用于cookie登陆
-    public function generateAuthKey()
-    {
-        $this->auth_key = \Yii::$app->security->generateRandomString();
-        $this->save();
     }
 }

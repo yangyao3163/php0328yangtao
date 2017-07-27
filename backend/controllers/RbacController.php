@@ -108,22 +108,22 @@ class RbacController extends \yii\web\Controller
     }
 
     //修改角色
-//    public function actionEditRole($name){
-//        $model = new RoleForm();
-//        //取消角色和权限的关联
-//        $authManager = \Yii::$app->authManager;
-//        $role = $authManager->getRole($name);
-//        //全部取消关联
-//        //$authManager->removeChildren($role);
-//        //再依次关联
-//        //表单权限多选回显
-//        //获取角色的权限
-//        $permissions = $authManager->getPermissionsByRole($name);
-//        $model->name = $role->name;
-//        $model->description = $role->description;
-//        $model->permissions = ArrayHelper::map($permissions,'name','name');
-//        return $this->render('add-role',['model'=>$model]);
-//    }
+    public function actionEditRole($name){
+        $model = new RoleForm();
+        //取消角色和权限的关联
+        $authManager = \Yii::$app->authManager;
+        $role = $authManager->getRole($name);
+        //全部取消关联
+        //$authManager->removeChildren($role);
+        //再依次关联
+        //表单权限多选回显
+        //获取角色的权限
+        $permissions = $authManager->getPermissionsByRole($name);
+        $model->name = $role->name;
+        $model->description = $role->description;
+        $model->permissions = ArrayHelper::map($permissions,'name','name');
+        return $this->render('add-role',['model'=>$model]);
+    }
 
     //角色删除
     public function actionDelRole($name){

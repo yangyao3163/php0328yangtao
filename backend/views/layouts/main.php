@@ -35,17 +35,37 @@ AppAsset::register($this);
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/user/index']],
+        ['label'=>'品牌管理','items'=>[
+            ['label'=>'添加品牌','url'=>['brand/add']],
+            ['label'=>'品牌列表','url'=>['brand/index']],
+        ]],
+        ['label'=>'商品管理','items'=>[
+            ['label'=>'添加商品','url'=>['goods/add']],
+            ['label'=>'商品列表','url'=>['goods/index']],
+            ['label'=>'添加商品分类','url'=>['goods-category/add']],
+            ['label'=>'商品分类列表','url'=>['goods-category/index']],
+        ]],
+        ['label'=>'文章管理','items'=>[
+            ['label'=>'添加文章','url'=>['article/add']],
+            ['label'=>'文章列表','url'=>['article/index']],
+            ['label'=>'文章分类添加','url'=>['article-category/add']],
+            ['label'=>'文章分类列表','url'=>['article-category/index']],
+        ]],
+        ['label'=>'权限管理','items'=>[
+            ['label'=>'添加权限','url'=>['rbac/add-permission']],
+            ['label'=>'权限列表','url'=>['rbac/permission-index']],
+            ['label'=>'角色添加','url'=>['rbac/add-role']],
+            ['label'=>'角色列表','url'=>['rbac/role-index']],
+        ]],
         ['label' => '修改密码', 'url' => ['/user/ch-pw']],
-
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/user/login']];
+        $menuItems[] = ['label' => '登陆', 'url' => ['/user/login']];
     } else {
         $menuItems[] = '<li>'
             . Html::beginForm(['/user/logout'], 'post')
             . Html::submitButton(
-                'Logout (' . Yii::$app->user->identity->username . ')',
+                '注销 (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link logout']
             )
             . Html::endForm()

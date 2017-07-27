@@ -1,4 +1,4 @@
-<?=\yii\bootstrap\Html::a("添加",["goods-category/add2"],["class"=>"btn btn-info btn-sm"])?>
+<?=\yii\bootstrap\Html::a("添加",["goods-category/add"],["class"=>"btn btn-info btn-sm"])?>
     <table class="table table-bordered table-condensed">
         <tr>
             <th>ID</th>

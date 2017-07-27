@@ -78,7 +78,7 @@ class GoodsCategoryController extends \yii\web\Controller
         //获取所有分类数据
         $categories = GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
 
-        return $this->render('add2',['model'=>$model,'categories'=>$categories]);
+        return $this->render('add',['model'=>$model,'categories'=>$categories]);
     }
 
     //修改商品分类-ztree
@@ -106,7 +106,7 @@ class GoodsCategoryController extends \yii\web\Controller
         //获取所有分类数据
         $categories = GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
 
-        return $this->render('add2',['model'=>$model,'categories'=>$categories]);
+        return $this->render('add',['model'=>$model,'categories'=>$categories]);
     }
 
     //分类删除  判断是否有子分类

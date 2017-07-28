@@ -109,20 +109,38 @@ class RbacController extends \yii\web\Controller
 
     //修改角色
     public function actionEditRole($name){
-        $model = new RoleForm();
-        //取消角色和权限的关联
-        $authManager = \Yii::$app->authManager;
-        $role = $authManager->getRole($name);
-        //全部取消关联
-        //$authManager->removeChildren($role);
-        //再依次关联
-        //表单权限多选回显
-        //获取角色的权限
-        $permissions = $authManager->getPermissionsByRole($name);
-        $model->name = $role->name;
-        $model->description = $role->description;
-        $model->permissions = ArrayHelper::map($permissions,'name','name');
-        return $this->render('add-role',['model'=>$model]);
+        $authManger=\Yii::$app->authManager;
+        $role=$authManger->getRole($name);
+        if(!$role==null){
+            $model=new RoleForm();
+            if(\Yii::$app->request->post()){
+                if($model->load(\Yii::$app->request->post()) && $model->validate()){
+                    //全部取消关联
+                    $authManger->removeChildren($role);
+                    if(is_array($model->permissions)){
+                        foreach($model->permissions as $permissionName){
+                            $permission=$authManger->getPermission($permissionName);
+                            if($permission)$authManger->addChild($role,$permission);
+                        }
+                    }
+                    $role->description=$model->description;
+                    //更新权限
+                    $authManger->update($name,$role);
+                    //提示
+                    \Yii::$app->session->setFlash('success','修改用户成功');
+                    //到INDEX页面
+                    return $this->redirect(['role-index']);
+                }
+            }else{//不是POST提交就回显数据
+                $permission=$authManger->getPermissionsByRole($name);
+                $model->name=$role->name;
+                $model->description=$role->description;
+                $model->permissions=ArrayHelper::map($permission,'name','name');
+            }
+            return $this->render('add-role',['model'=>$model]);
+        }else{
+            throw new NotFoundHttpException('没有该用户');
+        }
     }
 
     //角色删除

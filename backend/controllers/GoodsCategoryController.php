@@ -28,57 +28,33 @@ class GoodsCategoryController extends \yii\web\Controller
         return $this->render("index",["brand"=>$brand,'pager'=>$pager]);
     }
 
-    //添加商品分类
+    //新的添加
     public function actionAdd(){
-        $model = new GoodsCategory();
-        //判断是否是POST提交，并验证
-        if($model->load(\yii::$app->request->post()) && $model->validate()){
-            //判断分类是否是添加一级分类
+        $model=new GoodsCategory(['parent_id'=>0]);
+        $categories=GoodsCategory::find()->select(["id","name","parent_id"])->asArray()->all();
+        if($model->load(\Yii::$app->request->post()) && $model->validate()){
+            //判断是否是存在父级分类
             if($model->parent_id){
-                //非一级分类
-                $category = GoodsCategory::findOne(['id'=>$model->parent_id]);
+                //不是一级分类
+                $category=GoodsCategory::findOne(["id"=>$model->parent_id]);
+                //的父id的数据
                 if($category){
                     $model->prependTo($category);
                 }else{
-                    throw new HttpException('404','上级分类不存在');
+                    throw new HttpException(404,"上级分类不存在");
                 }
-
             }else{
-                //一级分类
+                //添加节点
                 $model->makeRoot();
             }
-            \Yii::$app->session->setFlash("success","分类添加成功");
-            return $this->redirect(['index']);
+            //提示
+            \Yii::$app->session->setFlash("success","商品分类添加成功");
+
+            //跳转
+            return $this->redirect(["goods-category/index"]);
         }
-        return $this->render('add',['model'=>$model]);
-    }
-
-    //添加商品分类-ztree
-    public function actionAdd2(){
-        $model = new GoodsCategory(['parent_id'=>0]);
-        //判断是否是POST提交，并验证
-        if($model->load(\yii::$app->request->post()) && $model->validate()){
-            //判断分类是否是添加一级分类
-            if($model->parent_id){
-                //非一级分类
-                $category = GoodsCategory::findOne(['id'=>$model->parent_id]);
-                if($category){
-                    $model->prependTo($category);
-                }else{
-                    throw new HttpException('404','上级分类不存在');
-                }
-
-            }else{
-                //一级分类
-                $model->makeRoot();
-            }
-            \Yii::$app->session->setFlash("success","分类添加成功");
-            return $this->redirect(['index']);
-        }
-        //获取所有分类数据
-        $categories = GoodsCategory::find()->select(['id','parent_id','name'])->asArray()->all();
-
-        return $this->render('add',['model'=>$model,'categories'=>$categories]);
+        //加载页面
+        return $this->render("add",["model"=>$model,"categories"=>$categories]);
     }
 
     //修改商品分类-ztree

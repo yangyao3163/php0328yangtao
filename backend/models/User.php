@@ -23,6 +23,7 @@ use yii\web\IdentityInterface;
 class User extends \yii\db\ActiveRecord implements IdentityInterface
 {
 
+    public $role=[];
 
     /**
      * @inheritdoc
@@ -45,6 +46,7 @@ class User extends \yii\db\ActiveRecord implements IdentityInterface
             [['username'], 'unique'],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
+            ['role','safe']
         ];
     }
 

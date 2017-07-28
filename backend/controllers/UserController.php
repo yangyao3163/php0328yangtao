@@ -7,6 +7,7 @@ use backend\models\LoginForm;
 use backend\models\User;
 use yii\data\Pagination;
 use yii\web\Request;
+use yii\helpers\ArrayHelper;
 
 class UserController extends \yii\web\Controller
 {
@@ -33,10 +34,18 @@ class UserController extends \yii\web\Controller
     public function actionAdd(){
         //实例化模型
         $model = new User();
+        $authManger=\Yii::$app->authManager;
         //判断post提交，加载表单数据
         if($model->load(\Yii::$app->request->post())&& $model->validate()){
             $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
             $model->save();
+            //角色
+            if(is_array($model->role)){
+                foreach($model->role as $roleName){
+                    $role=$authManger->createRole($roleName);
+                    if($role)$authManger->assign($role,$model->id);
+                }
+            }
             //提示
             \Yii::$app->session->setFlash("success","品牌添加成功");
             //跳转
@@ -49,9 +58,19 @@ class UserController extends \yii\web\Controller
     //修改
     public function actionEdit($id){
         //实例化模型,根据ID来修改
-        $model = User::findOne(['id'=>$id]);
+        $model = User::findOne(['id'=>$id]);//回显用户
+        $authManger=\Yii::$app->authManager;
+        $role=$authManger->getRolesByUser($model->id);
+        $model->role=ArrayHelper::map($role,'name','name');
         //判断post提交，加载表单数据
         if($model->load(\Yii::$app->request->post())&& $model->validate()){
+            $authManger->revokeAll($model->id);
+            if(is_array($model->role)){
+                foreach($model->role as $roleName){
+                    $role=$authManger->getRole($roleName);
+                    if($role)$authManger->assign($role,$model->id);
+                }
+            }
             $model->password_hash = \Yii::$app->security->generatePasswordHash($model->password_hash);
             $model->save();
             //提示

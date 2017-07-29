@@ -8,6 +8,7 @@ use yii\web\Request;
 use yii\web\UploadedFile;
 use flyok666\uploadifive\UploadAction;
 use flyok666\qiniu\Qiniu;
+use backend\filters\RbacFilter;
 
 
 class BrandController extends \yii\web\Controller
@@ -242,6 +243,17 @@ class BrandController extends \yii\web\Controller
         $qiniu->uploadFile($_FILES['tmp_name'],$key);
         //获取该图片在七牛云的地址
         $url = $qiniu->getLink($key);
+    }
+
+    //行为
+    public function behaviors()
+    {
+        return [
+            'rbac' => [
+                'class' => RbacFilter::className(),
+            ]
+        ];
+
     }
 
 }

@@ -8,6 +8,7 @@ use backend\models\User;
 use yii\data\Pagination;
 use yii\web\Request;
 use yii\helpers\ArrayHelper;
+use backend\filters\RbacFilter;
 
 class UserController extends \yii\web\Controller
 {
@@ -171,5 +172,20 @@ class UserController extends \yii\web\Controller
         //验证规则  都不能为空  验证旧密码是否正确  新密码不能和旧密码一样  确认新密码和新密码一样
         //表单验证通过 更新新密码
         return $this->render("chpw",["model"=>$model]);
+    }
+
+
+    //行为
+    public function behaviors()
+    {
+        return [
+            'rbac' => [
+                'class' => RbacFilter::className(),
+                'except'=>[
+                    'login','logout'
+                ],
+            ]
+        ];
+
     }
 }

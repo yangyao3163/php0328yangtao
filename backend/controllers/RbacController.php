@@ -6,6 +6,7 @@ use backend\models\PermissionForm;
 use backend\models\RoleForm;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
+use backend\filters\RbacFilter;
 
 class RbacController extends \yii\web\Controller
 {
@@ -166,5 +167,15 @@ class RbacController extends \yii\web\Controller
         return $this->render('role-index',['models'=>$models]);
     }
 
+    //行为
+    public function behaviors()
+    {
+        return [
+            'rbac' => [
+                'class' => RbacFilter::className(),
+            ]
+        ];
+
+    }
 
 }

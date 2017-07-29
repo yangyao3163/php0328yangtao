@@ -10,6 +10,7 @@ use yii\web\Controller;
 use backend\models\GoodsGallery;
 use flyok666\uploadifive\UploadAction;
 use yii\web\NotFoundHttpException;
+use backend\filters\RbacFilter;
 
 class GoodsController extends Controller{
 
@@ -193,5 +194,16 @@ class GoodsController extends Controller{
                 },
             ],
         ];
+    }
+
+    //行为
+    public function behaviors()
+    {
+        return [
+            'rbac' => [
+                'class' => RbacFilter::className(),
+            ]
+        ];
+
     }
 }

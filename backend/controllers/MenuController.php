@@ -5,6 +5,8 @@ namespace backend\controllers;
 use backend\models\Menu;
 use yii\web\HttpException;
 use yii\data\Pagination;
+use backend\filters\RbacFilter;
+
 
 class MenuController extends \yii\web\Controller
 {
@@ -33,7 +35,7 @@ class MenuController extends \yii\web\Controller
         //总条数
         $total = $query->count();
         //每页显示条数
-        $perPage = 2;
+        $perPage = 10;
         //分页工具条
         $pager = new Pagination([
             'totalCount'=>$total,
@@ -79,5 +81,16 @@ class MenuController extends \yii\web\Controller
         }
         //调用视图
         return $this->render('add',['model'=>$model]);
+    }
+
+    //行为
+    public function behaviors()
+    {
+        return [
+            'rbac' => [
+                'class' => RbacFilter::className(),
+            ]
+        ];
+
     }
 }

@@ -5,6 +5,7 @@ namespace backend\controllers;
 use backend\models\GoodsCategory;
 use yii\web\HttpException;
 use yii\data\Pagination;
+use backend\filters\RbacFilter;
 
 class GoodsCategoryController extends \yii\web\Controller
 {
@@ -126,4 +127,14 @@ class GoodsCategoryController extends \yii\web\Controller
         return $this->renderPartial('ztree');
     }
 
+    //行为
+    public function behaviors()
+    {
+        return [
+            'rbac' => [
+                'class' => RbacFilter::className(),
+            ]
+        ];
+
+    }
 }

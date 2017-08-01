@@ -68,8 +68,8 @@
                     </li>
                     <li>
                         <label for="">&nbsp;</label>
-                        <input type="hidden" name="LoginForm[rememberMe]" value="0">
-                        <input type="checkbox" name="LoginForm[rememberMe]" class="chb" value="1"  /> 保存登录信息
+                        <input type="hidden" name="MemberForm[rememberMe]" value="0">
+                        <input type="checkbox" name="MemberForm[rememberMe]" class="chb" value="1"  /> 保存登录信息
                     </li>
                     <li>
                             <label for="">&nbsp;</label>

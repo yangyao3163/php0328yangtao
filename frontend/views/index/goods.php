@@ -552,15 +552,16 @@
         <!-- 商品概要信息 start -->
         <div class="summary">
             <h3><strong><?=$goods->name?></strong></h3>
-
+            <?php foreach ($goodsGallery as $gallery): ?>
             <!-- 图片预览区域 start -->
             <div class="preview fl">
                 <div class="midpic">
-                    <a href="http://admin.yiishop.com<?=$goods->logo?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
-                        <img src="http://admin.yiishop.com<?=$goods->logo?>" alt="" />               <!-- 第一幅图片的中图 -->
+                    <a href="http://admin.yiishop.com<?=$gallery->path?>" class="jqzoom" rel="gal1">   <!-- 第一幅图片的大图 class 和 rel属性不能更改 -->
+                        <img src="http://admin.yiishop.com<?=$gallery->path?>" alt="" />               <!-- 第一幅图片的中图 -->
                     </a>
                 </div>
-
+                <?php break;?>
+                <?php endforeach;?>
                 <!--使用说明：此处的预览图效果有三种类型的图片，大图，中图，和小图，取得图片之后，分配到模板的时候，把第一幅图片分配到 上面的midpic 中，其中大图分配到 a 标签的href属性，中图分配到 img 的src上。 下面的smallpic 则表示小图区域，格式固定，在 a 标签的 rel属性中，分别指定了中图（smallimage）和大图（largeimage），img标签则显示小图，按此格式循环生成即可，但在第一个li上，要加上cur类，同时在第一个li 的a标签中，添加类 zoomThumbActive  -->
 
                 <div class="smallpic">
@@ -568,14 +569,13 @@
                     <a href="javascript:;" id="forward" class="on"></a>
                     <div class="smallpic_wrap">
                         <ul>
-                            <li class="cur">
-                                <a class="zoomThumbActive" href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'http://admin.yiishop.com<?=$goods->logo?>',largeimage: 'http://admin.yiishop.com<?=$goods->logo?>'}"><img src="http://admin.yiishop.com<?=$goods->logo?>"></a>
-                            </li>
-                            <?php foreach(\backend\models\GoodsGallery::find()->where(['=','goods_id',$goods->id])->all() as $c):?>
-                                <li class="cur">
-                                    <a  href="javascript:void(0);" rel="{gallery: 'gal1',smallimage: 'http://admin.yiishop.com<?=$c->path?>',largeimage: 'http://admin.yiishop.com<?=$c->path?>'}"><img src="http://admin.yiishop.com<?=$c->path?>"></a>
+                            <?php foreach ($goodsGallery as $gallery): ?>
+                                <li>
+                                    <a href="javascript:void(0);" rel="{gallery: 'gal1', smallimage: 'http://admin.yiishop.com<?=$gallery->path?>',largeimage: 'http://admin.yiishop.com<?=$gallery->path?>'}">
+                                        <img src="http://admin.yiishop.com<?=$gallery->path?>"></a>
                                 </li>
                             <?php endforeach;?>
+
                         </ul>
                     </div>
 
@@ -592,7 +592,7 @@
                     <li><span>上架时间：</span><?=date("Y-m-d H:i:s",$goods->create_time)?></li>
                     <li class="star"><span>商品评分：</span> <strong></strong><a href="">(已有21人评价)</a></li> <!-- 此处的星级切换css即可 默认为5星 star4 表示4星 star3 表示3星 star2表示2星 star1表示1星 -->
                 </ul>
-                <form action="<?=\yii\helpers\Url::to(['site/add-to-cart'])?>" method="get" class="choose">
+                <form action="<?=\yii\helpers\Url::to(['index/add-to-cart'])?>" method="get" class="choose">
                     <ul>
 
                         <li>
@@ -618,6 +618,7 @@
 
                     </ul>
                 </form>
+
             </div>
             <!-- 商品基本信息区域 end -->
         </div>
@@ -643,13 +644,13 @@
                             <li><span>商品编号：</span><?=$goods->sn?></li>
                             <li><span>品牌：</span><?=$goods->brand_id?></li>
                             <li><span>上架时间：</span><?=date("Y-m-d H:i:s",$goods->create_time)?></li>
-<!--                            <li><span>商品毛重：</span>2.47kg</li>-->
-<!--                            <li><span>商品产地：</span>中国大陆</li>-->
-<!--                            <li><span>显卡：</span>集成显卡</li>-->
-<!--                            <li><span>触控：</span>非触控</li>-->
-<!--                            <li><span>厚度：</span>正常厚度（>25mm）</li>-->
-<!--                            <li><span>处理器：</span>Intel i5</li>-->
-<!--                            <li><span>尺寸：</span>12英寸</li>-->
+                            <!--                            <li><span>商品毛重：</span>2.47kg</li>-->
+                            <!--                            <li><span>商品产地：</span>中国大陆</li>-->
+                            <!--                            <li><span>显卡：</span>集成显卡</li>-->
+                            <!--                            <li><span>触控：</span>非触控</li>-->
+                            <!--                            <li><span>厚度：</span>正常厚度（>25mm）</li>-->
+                            <!--                            <li><span>处理器：</span>Intel i5</li>-->
+                            <!--                            <li><span>尺寸：</span>12英寸</li>-->
                         </ul>
                     </div>
 

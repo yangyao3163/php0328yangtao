@@ -5,10 +5,16 @@ namespace frontend\controllers;
 use backend\models\Goods;
 use backend\models\GoodsCategory;
 use frontend\models\Address;
+use frontend\models\Cart;
+use frontend\models\LoginForm;
 use frontend\models\Member;
 use frontend\models\MemberForm;
 use yii\helpers\Json;
 use yii\web\NotFoundHttpException;
+use Aliyun\Core\Profile\DefaultProfile;
+use Aliyun\Core\DefaultAcsClient;
+use Aliyun\Api\Sms\Request\V20170525\SendSmsRequest;
+use Aliyun\Core\Config;
 
 class MemberController extends \yii\web\Controller
 {
@@ -18,7 +24,7 @@ class MemberController extends \yii\web\Controller
     public $enableCsrfValidation = false;
     //注册
     public function actionRegister(){
-        $model->scenario = Member::SCENARIO_REGISTER;
+//        $model->scenario = Member::SCENARIO_REGISTER;
 
         //实例化
         $model = new Member();
@@ -50,30 +56,46 @@ class MemberController extends \yii\web\Controller
             return Json::encode(['status'=>false,'msg'=>$model->getErrors()]);
         }
     }
-
-    //登录
-    public function actionLogin()
-    {
-        $model = new MemberForm();
+    //用户登录
+    public function actionLogin(){
+        $model=new LoginForm();
         return $this->render("login",["model"=>$model]);
     }
-
+    //登录ajax
     public function actionAjaxLogin()
     {
-        $model=new MemberForm();
+        $model=new LoginForm();
         if ($model->load(\Yii::$app->request->post())&& $model->validate()){
             if($model->login()){
-                //根据名称查询当前数据信息，
                 $member=Member::findOne(["username"=>$model->username]);
-                //最后登陆时间
+//                echo $model->username;exit;
                 $member->last_login_time=time();
-                //登陆ip
                 $member->last_login_ip=ip2long(\Yii::$app->request->userIP);
                 $member->save();
+                $member->saveCart();
                 return Json::encode(['status'=>true,'msg'=>'登陆成功']);
             }
         }
         return Json::encode(["status"=>false,"msg"=>$model->getErrors()]);
+    }
+
+
+//检测用户是否登录
+    public function actionUser()
+    {
+        //可以通过 Yii::$app->user 获得一个 User实例，
+        $user = \Yii::$app->user;
+
+        // 当前用户的身份实例。未认证用户则为 Null 。
+        $identity = \Yii::$app->user->identity;
+        var_dump($identity);
+
+        // 当前用户的ID。 未认证用户则为 Null 。
+        $id = \Yii::$app->user->id;
+        var_dump($id);
+        // 判断当前用户是否是游客（未认证的）
+        $isGuest = \Yii::$app->user->isGuest;
+        var_dump($isGuest);
     }
 
     //收获地址管理
@@ -104,6 +126,7 @@ class MemberController extends \yii\web\Controller
         }
         return Json::encode(["name"=>$model->name,"province"=>$model->province,'area'=>$model->area,"full_address"=>$model->full_address, "city"=>$model->city,"type"=>$model->type,"tel"=>$model->tel,"id"=>$model->id]);
     }
+
     public function actionEdit($id){
         $model=Address::findOne(["id"=>$id]);
         if (!$model){
@@ -133,6 +156,25 @@ class MemberController extends \yii\web\Controller
 
     }
 
+    //短信功能
+    public function actionTestSms(){
+        //SMS_80130111 农夫小灶
+        //LTAI7xmAkWvZuPA4
+        //kCUg8JWnDXssCwubGdnMGIo0aeQNSu
+        //获取用户输入的手机号
+        $tel = $_POST['tel'];
+        //随机生成验证码
+        $code = rand(1000,9999);
+        $res = \Yii::$app->sms->setPhoneNumbers($tel)->setTemplateParam(['code'=>$code])->send();
+        //将短信验证码保存到session
+        \Yii::$app->session->set('code_'.$tel,$code);
+        if($res){
+            return Json::encode(['status'=>true,'msg'=>'验证码发送成功']);
+        }else{
+            return Json::encode(['status'=>false,'msg'=>'验证码发送失败']);
+        }
+
+    }
 
 
 

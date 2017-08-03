@@ -32,9 +32,33 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     public $code;
     //短信验证码
     public $smsCode;
-    //自动登录
-    public $rememberMe = false;
+    public $rememberMe = false;//自动登录
 
+    public function saveCart(){
+        //用户登录成功
+        //1.获取cookie中的购物车数据，
+        $cookies = \Yii::$app->request->cookies;
+        $carts =unserialize($cookies->get('cart'));
+        //2.循环遍历购物车数据
+        foreach($carts as $goods_id=>$amount){
+            //(使用goods_id作为查询条件，member_id)
+            $cart = Cart::findOne(['goods_id'=>$goods_id,'member_id'=>$this->id]);
+            if($cart){
+                //2.1如果数据表已经有这个商品,就合并cookie中的数量
+                $cart->amount += $amount;
+                $cart->save();
+            }else{
+                //2.2如果数据表没有这个商品,就添加这个商品到购物车表
+                $cart = new Cart();
+                $cart->goods_id = $goods_id;//商品ID
+                $cart->amount = $amount;//商品数量
+                $cart->member_id = $this->id;//对应的用户id
+                $cart->save();
+            }
+        }
+        //同步完后，清空cookie购物车
+        \Yii::$app->response->cookies->remove('cart');
+    }
     /**
      * @inheritdoc
      */
@@ -51,16 +75,23 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
         return [
             ['rePassword', 'compare', 'compareAttribute'=>'password', 'message'=>'两次输入的密码不相同'],
             [['username'],"required","message"=>"{attribute}不能为空" ],
+            [['code','smsCode'],'required','on'=>self::SCENARIO_REGISTER ],
             [['password','rePassword'],"required",'on'=>self::SCENARIO_REGISTER,"message"=>"{attribute}不能为空" ],
             [['last_login_time', 'last_login_ip', 'status', 'created_at', 'updated_at'], 'integer'],
             [['username', 'password_hash', 'email'], 'string', 'max' => 255],
             [['auth_key', 'tel'], 'string', 'max' => 50],
             [['code'], 'captcha','captchaAction'=>'member/captcha',"message"=>"{attribute}错误" ,'on'=>self::SCENARIO_REGISTER],
             ['rememberMe', 'boolean'],//自动登录
-
+            ['smsCode',"validateCode",'on'=>self::SCENARIO_REGISTER],
         ];
     }
-
+    public function validateCode(){
+        //验证
+        $code2 = \Yii::$app->session->get('code_'.$this->tel);
+        if($code2 != $this->smsCode){
+            $this->addError("smscode","手机验证码错误");
+        }
+    }
     /**
      * @inheritdoc
      */
@@ -79,10 +110,12 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
             'created_at' => '添加时间',
             'updated_at' => '修改时间',
             'code'=>'验证码',
+            'smsCode' => '手机验证码',
             'password'=>'密码',
             'rePassword'=>'确认密码',
         ];
     }
+
 
     /**
      * Finds an identity by the given ID.
@@ -93,8 +126,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public static function findIdentity($id)
     {
-        // TODO: Implement findIdentity() method.
-        return self::findOne(['id'=>$id]);
+        return self::findOne(["id"=>$id]);
     }
 
     /**
@@ -109,8 +141,6 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
     public static function findIdentityByAccessToken($token, $type = null)
     {
         // TODO: Implement findIdentityByAccessToken() method.
-        return static::findOne(['accessToken'=>$token]);
-
     }
 
     /**
@@ -119,9 +149,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getId()
     {
-        // TODO: Implement getId() method.
         return $this->id;
-
     }
 
     /**
@@ -138,9 +166,7 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function getAuthKey()
     {
-        // TODO: Implement getAuthKey() method.
         return $this->auth_key;
-
     }
 
     /**
@@ -153,15 +179,6 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
      */
     public function validateAuthKey($authKey)
     {
-        // TODO: Implement validateAuthKey() method.
-        return $this->auth_key === $authKey;
-
-    }
-
-    //生成随机的auth_key，用于cookie登陆
-    public function generateAuthKey()
-    {
-        $this->auth_key = \Yii::$app->security->generateRandomString();
-        $this->save();
+        return $this->auth_key=$authKey;
     }
 }

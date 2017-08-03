@@ -77,8 +77,16 @@
                 </li>
                 <li id="li_smsCode">
                     <label for="">验证码：</label>
-                    <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Member[smsCode]" disabled="disabled" id="captcha"/> <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
-                    <p></p>
+                    <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Member[smsCode]" disabled="disabled" id="captcha"/>
+                    <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>
+                    <p id="code_phone"></p>
+<!--                <li id="li_smsCode">-->
+<!--                    <label for="">验证码：</label>-->
+<!--                    <input type="text" class="txt" value="" placeholder="请输入短信验证码" name="Member[smsCode]" disabled="disabled" id="captcha"/>-->
+<!--                    <input type="button" onclick="bindPhoneNum(this)" id="get_captcha" value="获取验证码" style="height: 25px;padding:3px 8px"/>-->
+<!--                    <p id="code_phone"></p>-->
+<!--                </li>-->
+
                 </li>
                 <li class="checkcode" id="li_code">
                     <?=$form->field($model,'code')->widget(\yii\captcha\Captcha::className(),['captchaAction'=>'member/captcha'])?>
@@ -139,9 +147,14 @@
 <script type="text/javascript" src="<?=Yii::getAlias('@web')?>/js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
     function bindPhoneNum(){
+        var tel =$("#tel").val();
+        var reg = /^0?1[3|4|5|8][0-9]\d{8}$/;
+        if (!reg.test(tel)) {
+            alert("号码输入有误~");
+            return false;
+        }
         //启用输入框
         $('#captcha').prop('disabled',false);
-
         var time=30;
         var interval = setInterval(function(){
             time--;
@@ -153,9 +166,14 @@
                 var html = time + ' 秒后再次获取';
                 $('#get_captcha').prop('disabled',true);
             }
-
             $('#get_captcha').val(html);
         },1000);
+        $.post("/member/test-sms",{tel:tel},function (data) {
+            console.debug(data);
+            var json=JSON.parse(data);
+            console.debug(json.msg);
+            $("#code_phone").text(json.msg);
+        })
     }
     //ajxj提交表单
     $(".login_btn").click(function(){
@@ -186,6 +204,24 @@
             $("#member-code-image").attr('src',json.url);
         });
     });
+
+    //手机验证码
+//    $("#get_captcha").click(function(){
+//        window.location.href="/member/test-sms";
+//    });
+//
+//    $('#get_captcha').click(function(){
+//        var tel = $.trim($('#tel').val());
+//        $.post('/member/test-sms', {'tel':tel},function(res){
+//            console.log(res);
+//            if (res) {
+//                alert('发送成功');
+//            } else {
+//                alert('发送失败');
+//            }
+//        });
+//    });
+
 </script>
 </body>
 </html>

@@ -3,11 +3,11 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
     <title>登录商城</title>
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/base.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/global.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/header.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/login.css" type="text/css">
-    <link rel="stylesheet" href="<?=Yii::getAlias('@web')?>/style/footer.css" type="text/css">
+    <link rel="stylesheet" href="/style/base.css" type="text/css">
+    <link rel="stylesheet" href="/style/global.css" type="text/css">
+    <link rel="stylesheet" href="/style/header.css" type="text/css">
+    <link rel="stylesheet" href="/style/login.css" type="text/css">
+    <link rel="stylesheet" href="/style/footer.css" type="text/css">
 </head>
 <body>
 <!-- 顶部导航 start -->
@@ -18,7 +18,7 @@
         </div>
         <div class="topnav_right fr">
             <ul>
-                <li>您好，欢迎来到京西！[<a href="login.html">登录</a>] [<a href="register.html">免费注册</a>] </li>
+                <li>您好，欢迎来到京西！[<a href="login">登录</a>] [<a href="register.html">免费注册</a>] </li>
                 <li class="line">|</li>
                 <li>我的订单</li>
                 <li class="line">|</li>
@@ -35,7 +35,7 @@
 <!-- 页面头部 start -->
 <div class="header w990 bc mt15">
     <div class="logo w990">
-        <h2 class="fl"><a href="index.html"><img src="<?=Yii::getAlias('@web')?>/images/logo.png" alt="京西商城"></a></h2>
+        <h2 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h2>
     </div>
 </div>
 <!-- 页面头部 end -->
@@ -48,38 +48,36 @@
     </div>
     <div class="login_bd">
         <div class="login_form fl">
-<!--            <form action="" method="post">-->
-            <?php $form = \yii\widgets\ActiveForm::begin(['id'=>'login_form'])?>
+            <!--            <form action="" method="post">-->
+            <?php $form=\yii\widgets\ActiveForm::begin(["id"=>"login_form"]) ?>
             <ul>
-                    <li>
-                        <label for="">用户名：</label>
-                        <input type="text" class="txt" name="MemberForm[username]" />
-                        <p></p>
-                    </li>
-                    <li >
-                        <label for="">密码：</label>
-                        <input type="password" class="txt" name="MemberForm[password]" />
-                        <a href="">忘记密码?</a>
-                        <p></p>
-                        </li>
-                    <li class="checkcode" id="li_code">
-                        <?=$form->field($model,'code')->widget(yii\captcha\Captcha::className(),["captchaAction"=>'member/captcha'])?>
-                        <p></p>
-                    </li>
-                    <li>
-                        <label for="">&nbsp;</label>
-                        <input type="hidden" name="MemberForm[rememberMe]" value="0">
-                        <input type="checkbox" name="MemberForm[rememberMe]" class="chb" value="1"  /> 保存登录信息
-                    </li>
-                    <li>
-                            <label for="">&nbsp;</label>
-                            <input type="button" value="" class="login_btn" />
-                    </li>
+                <li>
+                    <label for="">用户名：</label>
+                    <input type="text" class="txt" name="LoginForm[username]" />
+                    <p></p>
+                </li>
+                <li>
+                    <label for="">密码：</label>
+                    <input type="password" class="txt" name="LoginForm[password]" />
+                    <p></p>
+                </li>
+                <li class="checkcode" id="li_code">
+                    <?=$form->field($model,'code')->widget(yii\captcha\Captcha::className(),["captchaAction"=>'member/captcha'])?>
+                    <p></p>
+                </li>
+                <li>
+                    <label for="">&nbsp;</label>
+                    <input type="hidden" name="LoginForm[rememberMe]" value="0">
+                    <input type="checkbox" name="LoginForm[rememberMe]" class="chb" value="1"  /> 保存登录信息
+                    </label>
+                </li>
+                <li>
+                    <label for="">&nbsp;</label>
+                    <input type="button" value="" class="login_btn" />
+                </li>
             </ul>
-            <?php \yii\widgets\ActiveForm::end()?>
-
             <!--            </form>-->
-
+            <?php \yii\widgets\ActiveForm::end() ?>
 
             <div class="coagent mt15">
                 <dl>
@@ -99,7 +97,7 @@
             <h3>还不是商城用户</h3>
             <p>现在免费注册成为商城用户，便能立刻享受便宜又放心的购物乐趣，心动不如行动，赶紧加入吧!</p>
 
-            <a href="regist.html" class="reg_btn">免费注册 >></a>
+            <a href="register" class="reg_btn">免费注册 >></a>
         </div>
 
     </div>
@@ -126,41 +124,46 @@
         © 2005-2013 京东网上商城 版权所有，并保留所有权利。  ICP备案证书号:京ICP证070359号
     </p>
     <p class="auth">
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/xin.png" alt="" /></a>
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/kexin.jpg" alt="" /></a>
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/police.jpg" alt="" /></a>
-        <a href=""><img src="<?=Yii::getAlias('@web')?>/images/beian.gif" alt="" /></a>
+        <a href=""><img src="/images/xin.png" alt="" /></a>
+        <a href=""><img src="/images/kexin.jpg" alt="" /></a>
+        <a href=""><img src="/images/police.jpg" alt="" /></a>
+        <a href=""><img src="/images/beian.gif" alt="" /></a>
     </p>
 </div>
 <!-- 底部版权 end -->
-<script type="text/javascript" src="<?=Yii::getAlias('@web')?>/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="<?=Yii::getAlias("@web")?>/js/jquery-1.8.3.min.js"></script>
 <script type="text/javascript">
-    //更换验证码
-    //更换验证码
-    $("#memberform-code-image").click(function(){
-        $.getJSON('/member/captcha?refresh=1',function(json){
-            $("#memberform-code-image").attr('src',json.url);
-        });
+    //点击切换验证码
+    $("#loginform-code-image").click(function () {
+        $.getJSON("/member/captcha?refresh=1",function (data) {
+            $("#loginform-code-image").attr("src",data.url);
+        })
     });
-
+    //ajax登录
     $(".login_btn").click(function () {
+
         console.debug( $("#login_form").serialize(),"表单数据");
         $.post("/member/ajax-login",$("#login_form").serialize(),function (data) {
             console.debug(data);
             var json=JSON.parse(data);//转换成joson对象
             if(json.status){
                 alert("登录成功");
-//                window.location="member/login";
+                window.location="/index/index";
             }else {
                 $(json.msg).each(function(i,errors){
                     console.log(errors);
                     $.each(errors,function(name,error){
                         $("#li_"+name+" p").text(error.join(","));
-                    });
+
+                    })
+
+
                 })
             }
         })
+
     });
+
 </script>
 </body>
 </html>

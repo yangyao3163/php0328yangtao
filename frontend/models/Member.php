@@ -39,25 +39,28 @@ class Member extends \yii\db\ActiveRecord implements IdentityInterface
         //1.获取cookie中的购物车数据，
         $cookies = \Yii::$app->request->cookies;
         $carts =unserialize($cookies->get('cart'));
-        //2.循环遍历购物车数据
-        foreach($carts as $goods_id=>$amount){
-            //(使用goods_id作为查询条件，member_id)
-            $cart = Cart::findOne(['goods_id'=>$goods_id,'member_id'=>$this->id]);
-            if($cart){
-                //2.1如果数据表已经有这个商品,就合并cookie中的数量
-                $cart->amount += $amount;
-                $cart->save();
-            }else{
-                //2.2如果数据表没有这个商品,就添加这个商品到购物车表
-                $cart = new Cart();
-                $cart->goods_id = $goods_id;//商品ID
-                $cart->amount = $amount;//商品数量
-                $cart->member_id = $this->id;//对应的用户id
-                $cart->save();
+        if($carts != null){
+            //2.循环遍历购物车数据
+            foreach($carts as $goods_id=>$amount){
+                //(使用goods_id作为查询条件，member_id)
+                $cart = Cart::findOne(['goods_id'=>$goods_id,'member_id'=>$this->id]);
+                if($cart){
+                    //2.1如果数据表已经有这个商品,就合并cookie中的数量
+                    $cart->amount += $amount;
+                    $cart->save();
+                }else{
+                    //2.2如果数据表没有这个商品,就添加这个商品到购物车表
+                    $cart = new Cart();
+                    $cart->goods_id = $goods_id;//商品ID
+                    $cart->amount = $amount;//商品数量
+                    $cart->member_id = $this->id;//对应的用户id
+                    $cart->save();
+                }
             }
+            //同步完后，清空cookie购物车
+            \Yii::$app->response->cookies->remove('cart');
         }
-        //同步完后，清空cookie购物车
-        \Yii::$app->response->cookies->remove('cart');
+
     }
     /**
      * @inheritdoc

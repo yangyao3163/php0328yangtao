@@ -2,16 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
     <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
-    <title>购物车页面</title>
+    <title>成功提交订单</title>
     <link rel="stylesheet" href="/style/base.css" type="text/css">
     <link rel="stylesheet" href="/style/global.css" type="text/css">
     <link rel="stylesheet" href="/style/header.css" type="text/css">
-    <link rel="stylesheet" href="/style/cart.css" type="text/css">
+    <link rel="stylesheet" href="/style/success.css" type="text/css">
     <link rel="stylesheet" href="/style/footer.css" type="text/css">
-
-    <script type="text/javascript" src="/js/jquery-1.8.3.min.js"></script>
-    <script type="text/javascript" src="/js/cart1.js"></script>
-
 </head>
 <body>
 <!-- 顶部导航 start -->
@@ -40,11 +36,11 @@
 <div class="header w990 bc mt15">
     <div class="logo w990">
         <h2 class="fl"><a href="index.html"><img src="/images/logo.png" alt="京西商城"></a></h2>
-        <div class="flow fr">
+        <div class="flow fr flow3">
             <ul>
-                <li class="cur">1.我的购物车</li>
+                <li>1.我的购物车</li>
                 <li>2.填写核对订单信息</li>
-                <li>3.成功提交订单</li>
+                <li class="cur">3.成功提交订单</li>
             </ul>
         </div>
     </div>
@@ -54,42 +50,14 @@
 <div style="clear:both;"></div>
 
 <!-- 主体部分 start -->
-<div class="mycart w990 mt10 bc " id="shop">
-    <h2><span>我的购物车</span></h2>
-    <table>
-        <thead>
-        <tr>
-            <th class="col1">商品名称</th>
-            <th class="col3">单价</th>
-            <th class="col4">数量</th>
-            <th class="col5">小计</th>
-            <th class="col6">操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <?php foreach ($models as $model):?>
-        <tr data-id="<?=$model['id']?>">
-            <td class="col1"><a href=""><img src="http://admin.yiishop.com<?=$model['logo']?>" alt="" /></a>
-                <strong><a href=""><?=$model['name']?></a></strong></td>
-            <td class="col3">￥<span><?=$model['shop_price']?></span></td>
-            <td class="col4">
-                <a href="javascript:;" class="reduce_num"></a>
-                <input type="text" name="amount" value="<?=$carts[$model['id']]?>" class="amount"/>
-                <a href="javascript:;" class="add_num"></a>
-            </td>
-            <td class="col5">￥<span><?=$model['shop_price']*$carts[$model['id']]?></span></td>
-            <td class="col6"><a href="/index/del-cart?id=<?=$model['id']?>">删除</a>
-       <?php endforeach;?>
-        </tbody>
-        <tfoot>
-        <tr>
-            <td colspan="6">购物金额总计： <strong>￥ <span id="total"></span></strong></td>
-        </tr>
-        </tfoot>
-    </table>
-    <div class="cart_btn w990 bc mt10">
-        <a href="" class="continue">继续购物</a>
-        <a href="/index/order" class="checkout">结 算</a>
+<div class="success w990 bc mt15">
+    <div class="success_hd">
+        <h2>订单提交成功</h2>
+    </div>
+    <div class="success_bd">
+        <p><span></span>订单提交成功，我们将及时为您处理</p>
+
+        <p class="message">完成支付后，你可以 <a href="">查看订单状态</a>  <a href="">继续购物</a> <a href="">问题反馈</a></p>
     </div>
 </div>
 <!-- 主体部分 end -->
@@ -121,20 +89,5 @@
     </p>
 </div>
 <!-- 底部版权 end -->
-<script type="text/javascript">
-    $(function () {
-        var shops= $("#shop tbody tr .col5 span");
-        console.debug(shops);
-        var result=0;
-        shops.each(function (i,obj) {
-            result+=Number($(obj).text());
-        });
-        console.log(result);
-        var total=$('#total');
-        total.text(result+'.00')
-    })
-
-</script>
 </body>
 </html>
-

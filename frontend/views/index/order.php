@@ -253,7 +253,7 @@
         console.debug(payment,delivery,address);
         $.post("ajax-order",{address:address,payment:payment,delivery:delivery},function (data) {
             console.debug(data,"返回值");
-            if(data!="success"){
+            if(data=="success"){
                 alert("订单提交成功");
                 window.location.href="/index/form-order";
             }else {

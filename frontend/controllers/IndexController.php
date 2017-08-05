@@ -309,9 +309,11 @@ class IndexController extends Controller
                     $cart->delete();
                     //提交事务
                     $transaction->commit();
+                    return "success";
                 } catch (Exception $e) {
                     //回滚
                     $transaction->rollBack();
+                    return "fail";
                 }
             }
     }

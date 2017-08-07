@@ -325,12 +325,10 @@ class IndexController extends Controller
     }
 
 
-    public function actionMyOrder(){
-
-        $myorder = new OrderGoods();
-
-        return $this->render('my-order', ['myorder' => $myorder]);
-
+    public function actionOrderGoods(){
+        $models=Order::find()->where(['member_id'=>\Yii::$app->user->id])->asArray()->all();
+        //var_dump($models);exit;
+        return $this->render('order-goods',['models'=>$models]);
     }
 
 
